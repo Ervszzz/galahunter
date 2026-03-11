@@ -24,18 +24,29 @@ export default function Alerts() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="font-heading text-3xl font-700 text-gh-body">Price Alerts</h1>
-        <p className="text-gh-muted text-sm mt-1">
+        <h1 className="font-heading text-3xl font-semibold" style={{ color: 'var(--gh-body)' }}>
+          Price Alerts
+        </h1>
+        <p className="text-sm mt-1" style={{ color: 'var(--gh-muted)' }}>
           Set a target price. We&apos;ll track routes so you know when to book.
         </p>
       </div>
 
       {/* Create Alert Form */}
       <form className="card space-y-4" onSubmit={handleSubmit}>
-        <h2 className="font-heading text-lg font-600 text-gh-body">Create New Alert</h2>
+        <h2 className="font-heading text-lg font-semibold" style={{ color: 'var(--gh-body)' }}>
+          Create New Alert
+        </h2>
 
         {submitted && (
-          <div className="bg-green-950 border border-green-800 text-green-300 rounded-xl px-4 py-3 text-sm">
+          <div
+            className="rounded-xl px-4 py-3 text-sm"
+            style={{
+              backgroundColor: 'rgba(20,83,45,0.3)',
+              border: '1px solid rgba(22,101,52,0.5)',
+              color: '#86efac',
+            }}
+          >
             ✅ Alert created! We&apos;ll watch this route for you.
           </div>
         )}
@@ -107,12 +118,16 @@ export default function Alerts() {
       {alerts.length === 0 ? (
         <div className="card text-center py-16">
           <p className="text-4xl mb-4">🔕</p>
-          <p className="text-base font-medium text-gh-body">No alerts yet</p>
-          <p className="text-sm text-gh-muted mt-1">Create one above to start tracking prices.</p>
+          <p className="text-base font-medium" style={{ color: 'var(--gh-body)' }}>
+            No alerts yet
+          </p>
+          <p className="text-sm mt-1" style={{ color: 'var(--gh-muted)' }}>
+            Create one above to start tracking prices.
+          </p>
         </div>
       ) : (
         <div className="space-y-3">
-          <h2 className="font-heading text-base font-600 text-gh-muted">
+          <h2 className="font-heading text-base font-semibold" style={{ color: 'var(--gh-muted)' }}>
             {alerts.length} alert{alerts.length !== 1 ? 's' : ''}
           </h2>
           {alerts.map((alert) => (
@@ -124,15 +139,16 @@ export default function Alerts() {
             >
               <div className="flex items-center gap-3 min-w-0">
                 <span
-                  className={`shrink-0 w-2 h-2 rounded-full ${
-                    alert.active ? 'bg-gh-light' : 'bg-gh-muted'
-                  }`}
+                  className="shrink-0 w-2 h-2 rounded-full"
+                  style={{
+                    backgroundColor: alert.active ? 'var(--gh-light)' : 'var(--gh-muted)',
+                  }}
                 />
                 <div className="min-w-0">
-                  <p className="font-semibold text-gh-body">
+                  <p className="font-semibold" style={{ color: 'var(--gh-body)' }}>
                     {alert.origin} → {alert.destination}
                   </p>
-                  <p className="text-xs text-gh-muted truncate">
+                  <p className="text-xs truncate" style={{ color: 'var(--gh-muted)' }}>
                     Max {alert.currency}{' '}
                     {parseFloat(alert.maxPrice).toLocaleString()} &middot; Added{' '}
                     {new Date(alert.createdAt).toLocaleDateString('en-PH', {

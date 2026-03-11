@@ -2,84 +2,122 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ── Design tokens ──────────────────────────────────── */
+:root {
+  --gh-bg:           #07090f;
+  --gh-card:         #0e1422;
+  --gh-border:       #1a2035;
+  --gh-border-hover: #2a3a6e;
+  --gh-accent:       #3b5fc0;
+  --gh-light:        #6389ff;
+  --gh-muted:        #4a5568;
+  --gh-body:         #e2e8f0;
+  --gh-navy:         #1e3a8a;
+  --gh-pill:         #111827;
+}
+
+/* ── Base ───────────────────────────────────────────── */
 @layer base {
   html {
     color-scheme: dark;
   }
   body {
-    @apply bg-gh-bg text-gh-body font-sans;
+    background-color: var(--gh-bg);
+    color: var(--gh-body);
+    font-family: 'DM Sans', system-ui, sans-serif;
     margin: 0;
   }
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Space Grotesk', system-ui, sans-serif;
   }
-  /* Dark calendar/date picker */
   input[type='date']::-webkit-calendar-picker-indicator {
     filter: invert(0.6);
   }
-  /* Dark select options */
   select option {
     background-color: #0e1422;
     color: #e2e8f0;
   }
 }
 
+/* ── Components ─────────────────────────────────────── */
 @layer components {
   .btn-primary {
     @apply text-white font-semibold py-2.5 px-6 rounded-xl
            transition-all duration-200 active:scale-95
            disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100;
-    background: linear-gradient(135deg, #3b5fc0, #1e3a8a);
+    background: linear-gradient(135deg, var(--gh-accent), var(--gh-navy));
   }
   .btn-primary:hover:not(:disabled) {
     box-shadow: 0 0 24px rgba(59, 93, 192, 0.45);
   }
 
   .btn-secondary {
-    @apply bg-gh-pill text-gh-body font-semibold py-2.5 px-6 rounded-xl
-           border border-gh-border transition-all duration-200 active:scale-95;
+    @apply font-semibold py-2.5 px-6 rounded-xl
+           border transition-all duration-200 active:scale-95;
+    background-color: var(--gh-pill);
+    color: var(--gh-body);
+    border-color: var(--gh-border);
   }
   .btn-secondary:hover {
-    @apply border-gh-accent;
+    border-color: var(--gh-accent);
   }
 
   .btn-danger {
-    @apply text-red-400 hover:text-red-300 font-medium transition-colors duration-200;
+    @apply font-medium transition-colors duration-200;
+    color: #f87171;
+  }
+  .btn-danger:hover {
+    color: #fca5a5;
   }
 
   .card {
-    @apply bg-gh-card rounded-2xl border border-gh-border p-6 transition-all duration-200;
+    @apply rounded-2xl p-6 transition-all duration-200;
+    background-color: var(--gh-card);
+    border: 1px solid var(--gh-border);
   }
   .card:hover {
-    border-color: #2a3a6e;
+    border-color: var(--gh-border-hover);
     box-shadow: 0 8px 32px rgba(59, 93, 201, 0.15);
   }
 
   .input-field {
-    @apply w-full bg-gh-card border border-gh-border rounded-xl px-4 py-2.5 text-sm
-           text-gh-body placeholder-gh-muted
-           focus:outline-none focus:ring-0 focus:border-gh-accent
+    @apply w-full rounded-xl px-4 py-2.5 text-sm
+           focus:outline-none focus:ring-0
            transition-colors duration-200;
+    background-color: var(--gh-card);
+    border: 1px solid var(--gh-border);
+    color: var(--gh-body);
+  }
+  .input-field::placeholder {
+    color: var(--gh-muted);
+  }
+  .input-field:focus {
+    border-color: var(--gh-accent);
   }
 
   .pill {
-    @apply bg-gh-pill border border-gh-border rounded-full px-4 py-1.5 text-sm
-           text-gh-body transition-all duration-150;
+    @apply rounded-full px-4 py-1.5 text-sm transition-all duration-150;
+    background-color: var(--gh-pill);
+    border: 1px solid var(--gh-border);
+    color: var(--gh-body);
   }
   .pill:hover {
-    @apply border-gh-accent text-gh-light;
+    border-color: var(--gh-accent);
+    color: var(--gh-light);
   }
 
   .badge-discount {
     @apply text-xs font-semibold px-2.5 py-0.5 rounded-full;
-    background: linear-gradient(135deg, #1e3a8a, #3b5fc0);
+    background: linear-gradient(135deg, var(--gh-navy), var(--gh-accent));
     color: #93b4ff;
   }
 
   .label {
-    @apply block text-sm font-medium text-gh-body mb-1.5;
+    @apply block text-sm font-medium mb-1.5;
+    color: var(--gh-body);
   }
   .label-muted {
-    @apply text-gh-muted font-normal;
+    color: var(--gh-muted);
+    font-weight: 400;
   }
 }

@@ -30,37 +30,56 @@ function ItineraryRow({ itinerary, label }) {
   const first = segments[0];
   const last = segments[segments.length - 1];
   const stops = segments.length - 1;
-
   const isReturn = label === 'Return';
 
   return (
-    <div className="rounded-xl px-4 py-3 bg-gh-bg border border-gh-border">
-      <p className={`text-xs font-semibold mb-2 ${isReturn ? 'text-gh-muted' : 'text-gh-light'}`}>
+    <div
+      className="rounded-xl px-4 py-3"
+      style={{ backgroundColor: 'var(--gh-bg)', border: '1px solid var(--gh-border)' }}
+    >
+      <p
+        className="text-xs font-semibold mb-2"
+        style={{ color: isReturn ? 'var(--gh-muted)' : 'var(--gh-light)' }}
+      >
         {label}
       </p>
       <div className="flex items-center justify-between gap-2">
         <div className="text-center min-w-[3.5rem]">
-          <p className="text-lg font-bold text-gh-body leading-none">{formatTime(first?.departure?.at)}</p>
-          <p className="text-sm font-semibold text-gh-body mt-0.5">{first?.departure?.iataCode}</p>
-          <p className="text-xs text-gh-muted">{formatDate(first?.departure?.at)}</p>
+          <p className="text-lg font-bold leading-none" style={{ color: 'var(--gh-body)' }}>
+            {formatTime(first?.departure?.at)}
+          </p>
+          <p className="text-sm font-semibold mt-0.5" style={{ color: 'var(--gh-body)' }}>
+            {first?.departure?.iataCode}
+          </p>
+          <p className="text-xs" style={{ color: 'var(--gh-muted)' }}>
+            {formatDate(first?.departure?.at)}
+          </p>
         </div>
 
         <div className="flex-1 flex flex-col items-center px-1">
-          <p className="text-xs text-gh-muted">{parseDuration(itinerary.duration)}</p>
+          <p className="text-xs" style={{ color: 'var(--gh-muted)' }}>
+            {parseDuration(itinerary.duration)}
+          </p>
           <div className="relative w-full flex items-center my-0.5">
-            <div className="flex-1 h-px bg-gh-border" />
-            <span className="px-1 text-gh-accent text-xs">✈</span>
-            <div className="flex-1 h-px bg-gh-border" />
+            <div className="flex-1 h-px" style={{ backgroundColor: 'var(--gh-border)' }} />
+            <span className="px-1 text-xs" style={{ color: 'var(--gh-accent)' }}>✈</span>
+            <div className="flex-1 h-px" style={{ backgroundColor: 'var(--gh-border)' }} />
           </div>
-          <p className="text-xs text-gh-muted">
+          <p className="text-xs" style={{ color: 'var(--gh-muted)' }}>
             {stops === 0 ? 'Non-stop' : `${stops} stop${stops > 1 ? 's' : ''}`}
           </p>
         </div>
 
         <div className="text-center min-w-[3.5rem]">
-          <p className="text-lg font-bold text-gh-body leading-none">{formatTime(last?.arrival?.at)}</p>
-          <p className="text-sm font-semibold text-gh-body mt-0.5">{last?.arrival?.iataCode}</p>
-          <p className="text-xs text-gh-muted">{formatDate(last?.arrival?.at)}</p>
+          <p className="text-lg font-bold leading-none" style={{ color: 'var(--gh-body)' }}>
+            {formatTime(last?.arrival?.at)}
+          </p>
+          <p className="text-sm font-semibold mt-0.5" style={{ color: 'var(--gh-body)' }}>
+            {last?.arrival?.iataCode}
+          </p>
+          <p className="text-xs" style={{ color: 'var(--gh-muted)' }}>
+            {formatDate(last?.arrival?.at)}
+          </p>
         </div>
       </div>
     </div>
@@ -87,16 +106,18 @@ export default function FlightCard({ offer, dictionaries = {} }) {
       {/* Header */}
       <div className="flex justify-between items-start">
         <div>
-          <p className="font-semibold text-gh-body">{carrierName || 'Airline'}</p>
-          <p className="text-xs text-gh-muted mt-0.5">
+          <p className="font-semibold" style={{ color: 'var(--gh-body)' }}>
+            {carrierName || 'Airline'}
+          </p>
+          <p className="text-xs mt-0.5" style={{ color: 'var(--gh-muted)' }}>
             {carrierCode} {firstSeg?.number}
           </p>
         </div>
         <div className="text-right">
-          <p className="text-2xl font-bold text-gh-light">
+          <p className="text-2xl font-bold" style={{ color: 'var(--gh-light)' }}>
             {offer.price?.currency} {price}
           </p>
-          <p className="text-xs text-gh-muted">total · all fees</p>
+          <p className="text-xs" style={{ color: 'var(--gh-muted)' }}>total · all fees</p>
         </div>
       </div>
 

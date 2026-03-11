@@ -22,22 +22,19 @@ export default function Home() {
     <div className="space-y-8">
       {/* Hero */}
       <div className="text-center py-10">
-        <h1 className="font-heading text-4xl md:text-5xl font-700 text-gh-body mb-3 leading-tight">
+        <h1 className="font-heading text-4xl md:text-5xl font-semibold mb-3 leading-tight"
+            style={{ color: 'var(--gh-body)' }}>
           Hunt Your Next{' '}
-          <span className="text-gh-light">Adventure</span>
+          <span style={{ color: 'var(--gh-light)' }}>Adventure</span>
         </h1>
-        <p className="text-base text-gh-muted max-w-lg mx-auto">
+        <p className="text-base max-w-lg mx-auto" style={{ color: 'var(--gh-muted)' }}>
           Find the best flight deals from the Philippines to the world.
         </p>
 
         {/* Popular route pills */}
         <div className="flex flex-wrap justify-center gap-2 mt-6">
           {POPULAR_ROUTES.map(({ from, to, label }) => (
-            <button
-              key={label}
-              onClick={() => fillRoute(from, to)}
-              className="pill"
-            >
+            <button key={label} onClick={() => fillRoute(from, to)} className="pill">
               {label}
             </button>
           ))}
@@ -48,7 +45,14 @@ export default function Home() {
 
       {/* Error */}
       {error && (
-        <div className="bg-red-950 border border-red-800 text-red-300 rounded-xl px-5 py-4 text-sm">
+        <div
+          className="rounded-xl px-5 py-4 text-sm"
+          style={{
+            backgroundColor: 'rgba(127,29,29,0.3)',
+            border: '1px solid rgba(185,28,28,0.5)',
+            color: '#fca5a5',
+          }}
+        >
           ⚠️ {error}
         </div>
       )}
@@ -59,7 +63,10 @@ export default function Home() {
       {/* Results */}
       {!loading && results !== null && (
         <div>
-          <h2 className="font-heading text-lg font-600 text-gh-body mb-4">
+          <h2
+            className="font-heading text-lg font-semibold mb-4"
+            style={{ color: 'var(--gh-body)' }}
+          >
             {results.length > 0
               ? `${results.length} flight${results.length !== 1 ? 's' : ''} found`
               : '😔 No flights found for this route and date. Try different dates!'}

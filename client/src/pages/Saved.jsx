@@ -8,8 +8,10 @@ export default function Saved() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="font-heading text-3xl font-700 text-gh-body">Saved Flights</h1>
-        <p className="text-gh-muted text-sm mt-1">
+        <h1 className="font-heading text-3xl font-semibold" style={{ color: 'var(--gh-body)' }}>
+          Saved Flights
+        </h1>
+        <p className="text-sm mt-1" style={{ color: 'var(--gh-muted)' }}>
           {savedFlights.length === 0
             ? 'No saved flights yet.'
             : `${savedFlights.length} saved deal${savedFlights.length !== 1 ? 's' : ''}`}
@@ -19,8 +21,10 @@ export default function Saved() {
       {savedFlights.length === 0 ? (
         <div className="card text-center py-16">
           <p className="text-4xl mb-4">🗂️</p>
-          <p className="text-base font-medium text-gh-body mb-2">No saved flights yet</p>
-          <p className="text-sm text-gh-muted mb-6">
+          <p className="text-base font-medium mb-2" style={{ color: 'var(--gh-body)' }}>
+            No saved flights yet
+          </p>
+          <p className="text-sm mb-6" style={{ color: 'var(--gh-muted)' }}>
             Search for flights and tap &quot;Save Deal&quot; to bookmark them here.
           </p>
           <Link to="/" className="btn-primary inline-block">
@@ -31,7 +35,7 @@ export default function Saved() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           {savedFlights.map((offer) => (
             <div key={offer.id}>
-              <p className="text-xs text-gh-muted mb-1.5">
+              <p className="text-xs mb-1.5" style={{ color: 'var(--gh-muted)' }}>
                 Saved{' '}
                 {new Date(offer.savedAt).toLocaleDateString('en-PH', {
                   year: 'numeric',
