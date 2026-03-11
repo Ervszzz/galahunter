@@ -3,7 +3,7 @@ services:
     name: galahunter-backend
     env: node
     buildCommand: cd server && npm install
-    startCommand: cd server && node src/index.js
+    startCommand: node server/index.js
     envVars:
       - key: TRAVELPAYOUTS_TOKEN
         sync: false
