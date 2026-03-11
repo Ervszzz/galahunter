@@ -19,32 +19,41 @@ api.interceptors.response.use(
 );
 
 /**
- * Search for flight offers via POST /api/flights/search
+ * Search for cheap flights via GET /api/flights/search (TravelPayouts)
  * @param {Object} params
  * @param {string} params.originLocationCode       IATA code, e.g. "MNL"
  * @param {string} params.destinationLocationCode  IATA code, e.g. "SIN"
  * @param {string} params.departureDate            YYYY-MM-DD
  * @param {string} [params.returnDate]             YYYY-MM-DD — omit for one-way
  * @param {number} [params.adults]                 default 1
- * @param {string} [params.travelClass]            ECONOMY|PREMIUM_ECONOMY|BUSINESS|FIRST
- * @param {boolean} [params.nonStop]               default false
- * @param {number} [params.max]                    max results, default 20
  * @param {string} [params.currencyCode]           default PHP
+ * Returns: { data: [...offers], dictionaries: {}, cachedAt: timestamp }
  */
 export async function searchFlights(params) {
-  const { data } = await api.post('/flights/search', params);
+  const { data } = await api.get('/flights/search', { params });
   return data;
 }
 
 /**
- * Get cheapest fare dates via GET /api/flights/cheapest
+ * Get cheapest fares by day in a month via GET /api/flights/calendar
  * @param {Object} params
  * @param {string} params.origin       IATA code
  * @param {string} params.destination  IATA code
- * @param {boolean} [params.oneWay]
- * @param {string} [params.departureDate]  YYYY-MM-DD
+ * @param {string} params.month        YYYY-MM
+ * @param {string} [params.currency]   default PHP
  */
-export async function getCheapestDates(params) {
-  const { data } = await api.get('/flights/cheapest', { params });
+export async function getCalendar(params) {
+  const { data } = await api.get('/flights/calendar', { params });
+  return data;
+}
+
+/**
+ * Get popular/latest destinations from an origin via GET /api/flights/popular
+ * @param {Object} [params]
+ * @param {string} [params.origin]    IATA code, default MNL
+ * @param {string} [params.currency]  default PHP
+ */
+export async function getPopular(params) {
+  const { data } = await api.get('/flights/popular', { params });
   return data;
 }

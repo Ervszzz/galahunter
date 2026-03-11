@@ -17,6 +17,7 @@ export function useFlightSearch() {
   const [form, setForm] = useState(INITIAL_FORM);
   const [results, setResults] = useState(null);       // null = no search yet
   const [dictionaries, setDictionaries] = useState(null);
+  const [cachedAt, setCachedAt] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -40,6 +41,7 @@ export function useFlightSearch() {
       const data = await searchFlights(payload);
       setResults(data.data || []);
       setDictionaries(data.dictionaries || {});
+      setCachedAt(data.cachedAt || Date.now());
     } catch (err) {
       setError(err.message);
       setResults([]);
@@ -51,7 +53,8 @@ export function useFlightSearch() {
   function clearResults() {
     setResults(null);
     setError(null);
+    setCachedAt(null);
   }
 
-  return { form, updateForm, results, dictionaries, loading, error, search, clearResults };
+  return { form, updateForm, results, dictionaries, cachedAt, loading, error, search, clearResults };
 }

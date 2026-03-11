@@ -245,6 +245,17 @@ export default function FlightCard({ offer, dictionaries = {}, index = 0 }) {
             >
               {saved ? '❤️ Saved' : 'Save Deal →'}
             </button>
+            {offer.bookingUrl && (
+              <a
+                href={offer.bookingUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="book-btn"
+                style={{ display: 'block', textAlign: 'center', textDecoration: 'none', background: 'linear-gradient(135deg, #065f46, #047857)' }}
+              >
+                Book Now ↗
+              </a>
+            )}
           </div>
         </div>
       </div>

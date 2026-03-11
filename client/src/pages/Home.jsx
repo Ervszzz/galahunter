@@ -16,10 +16,9 @@ const POPULAR_ROUTES = [
 ];
 
 export default function Home() {
-  const { form, updateForm, results, dictionaries, loading, error, search } = useFlightSearch();
-  const [activeTag, setActiveTag]   = useState('All');
-  const [sortBy, setSortBy]         = useState('price');
-  const [searchTime]                = useState(new Date());
+  const { form, updateForm, results, dictionaries, cachedAt, loading, error, search } = useFlightSearch();
+  const [activeTag, setActiveTag] = useState('All');
+  const [sortBy, setSortBy]       = useState('price');
 
   function fillRoute(from, to) {
     updateForm('originLocationCode', from);
@@ -45,7 +44,7 @@ export default function Home() {
       });
   }, [results, activeTag, sortBy]);
 
-  const minutesAgo = Math.floor((new Date() - searchTime) / 60000);
+  const minutesAgo = cachedAt ? Math.floor((Date.now() - cachedAt) / 60000) : 0;
 
   return (
     <div>
