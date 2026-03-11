@@ -20,6 +20,11 @@ app.get('/api/health', (req, res) => {
 app.use('/api/flights', flightRoutes);
 app.use(errorHandler);
 
-app.listen(PORT, () => {
-  console.log(`✈️  GalaHunter server running on http://localhost:${PORT}`);
-});
+// Only start the HTTP server when running locally (not on Vercel serverless)
+if (process.env.VERCEL !== '1') {
+  app.listen(PORT, () => {
+    console.log(`✈️  GalaHunter server running on http://localhost:${PORT}`);
+  });
+}
+
+module.exports = app;

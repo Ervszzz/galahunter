@@ -44,6 +44,18 @@ Frontend runs on `http://localhost:5173`, backend on `http://localhost:3001`.
 
 Responses are cached for **10 minutes** to avoid rate limits.
 
+## Deploy to Vercel
+
+1. Push this repo to GitHub
+2. Import the project at [vercel.com/new](https://vercel.com/new)
+3. Vercel will auto-detect the `vercel.json` config — no extra settings needed
+4. Add environment variables in **Project Settings → Environment Variables**:
+   - `TRAVELPAYOUTS_TOKEN`
+   - `TRAVELPAYOUTS_MARKER`
+5. Deploy — frontend and API are served from the same domain
+
+> The `/api/*` routes are handled by a Vercel serverless function (`api/index.js`). The Vite dev proxy is only used locally.
+
 ## Affiliate links
 
 "Book Now" buttons link to Aviasales with your `MARKER` appended as an affiliate parameter. You earn commission on completed bookings made through these links.
