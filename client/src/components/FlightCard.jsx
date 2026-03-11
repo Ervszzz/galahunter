@@ -49,8 +49,16 @@ const CITY_NAMES = {
 };
 
 function getBookingUrl(carrierCode, fromCode, toCode, departDate) {
-  const date = departDate ? departDate.split('T')[0] : '';
-  return `https://www.kiwi.com/en/search/results/${fromCode}/${toCode}${date ? `/${date}/no-return` : ''}`;
+  // Skyscanner: lowercase IATA codes + YYMMDD date
+  // e.g. skyscanner.net/transport/flights/mnl/sin/261003/
+  const from = fromCode.toLowerCase();
+  const to = toCode.toLowerCase();
+  if (departDate) {
+    const [y, m, d] = departDate.split('T')[0].split('-');
+    const yymmdd = `${y.slice(2)}${m}${d}`;
+    return `https://www.skyscanner.net/transport/flights/${from}/${to}/${yymmdd}/`;
+  }
+  return `https://www.skyscanner.net/transport/flights/${from}/${to}/`;
 }
 
 // Destination emoji map by IATA code
