@@ -49,8 +49,8 @@ export function useFlightSearch() {
   }, [loadPopular]);
 
   const search = useCallback(async () => {
-    if (!form.originLocationCode || !form.destinationLocationCode || !form.departureDate) {
-      setError('Please fill in origin, destination, and departure date.');
+    if (!form.originLocationCode || !form.destinationLocationCode) {
+      setError('Please select an origin and destination.');
       return;
     }
 
@@ -81,5 +81,5 @@ export function useFlightSearch() {
     setIsPopular(false);
   }
 
-  return { form, updateForm, results, dictionaries, cachedAt, isPopular, loading, error, search, clearResults };
+  return { form, updateForm, results, dictionaries, cachedAt, isPopular, loading, error, search, loadPopular, clearResults };
 }

@@ -16,7 +16,7 @@ const POPULAR_ROUTES = [
 ];
 
 export default function Home() {
-  const { form, updateForm, results, dictionaries, cachedAt, isPopular, loading, error, search } = useFlightSearch();
+  const { form, updateForm, results, dictionaries, cachedAt, isPopular, loading, error, search, loadPopular } = useFlightSearch();
   const [activeTag, setActiveTag] = useState('All');
   const [sortBy, setSortBy]       = useState('price');
 
@@ -114,12 +114,24 @@ export default function Home() {
         <>
           {/* Stats row */}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 22 }}>
-            <p style={{ color: '#2d3748', fontSize: 14 }}>
-              {isPopular
-                ? <><span style={{ color: '#e2e8f0', fontWeight: 600 }}>Popular deals</span> from Manila</>
-                : <><span style={{ color: '#e2e8f0', fontWeight: 600 }}>{filtered.length}</span> deal{filtered.length !== 1 ? 's' : ''} found</>
-              }
-            </p>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+              <p style={{ color: '#2d3748', fontSize: 14 }}>
+                {isPopular
+                  ? <><span style={{ color: '#e2e8f0', fontWeight: 600 }}>Popular deals</span> from Manila</>
+                  : <><span style={{ color: '#e2e8f0', fontWeight: 600 }}>{filtered.length}</span> deal{filtered.length !== 1 ? 's' : ''} found</>
+                }
+              </p>
+              {!isPopular && (
+                <button
+                  onClick={loadPopular}
+                  style={{ background: 'transparent', border: '1px solid #1a2035', color: '#4a5568', borderRadius: 8, padding: '4px 12px', fontSize: 12, cursor: 'pointer', fontFamily: "'Space Grotesk', sans-serif", transition: 'all 0.15s' }}
+                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = '#2a3a6e'; e.currentTarget.style.color = '#93b4ff'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.borderColor = '#1a2035'; e.currentTarget.style.color = '#4a5568'; }}
+                >
+                  ← Home
+                </button>
+              )}
+            </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, color: '#2d3748' }}>
               <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#3b5fc0', display: 'inline-block', animation: 'pulse-dot 2s infinite' }} />
               {minutesAgo === 0 ? 'Just updated' : `Updated ${minutesAgo}m ago`}
