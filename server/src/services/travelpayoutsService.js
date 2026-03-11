@@ -57,14 +57,14 @@ function normalizeOffers(origin, destination, destData, currency, departDate, pa
 const CABIN_MAP = { 0: 'ECONOMY', 1: 'BUSINESS', 2: 'FIRST' };
 
 function normalizePopularOffer(item, passengers = 1) {
-  const { origin, destination, depart_date, value, duration, number_of_changes, trip_class } = item;
+  const { origin, destination, depart_date, value, duration, number_of_changes, trip_class, airline } = item;
   const stops = number_of_changes ?? 0;
 
   const segments = [
     {
       departure: { iataCode: origin, at: depart_date ? `${depart_date}T00:00:00` : '' },
       arrival:   { iataCode: destination, at: '' },
-      carrierCode: '',
+      carrierCode: airline || '',
       number: '',
     },
     ...Array(stops).fill({ departure: {}, arrival: {}, carrierCode: '', number: '' }),
