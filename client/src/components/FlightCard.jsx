@@ -296,7 +296,7 @@ export default function FlightCard({ offer, dictionaries = {}, index = 0 }) {
             <div style={{ fontSize: 28, fontWeight: 700, color: '#e2e8f0', fontFamily: "'Space Grotesk', sans-serif", letterSpacing: '-1px', lineHeight: 1 }}>
               {currency === 'PHP' ? '₱' : currency}{price.toLocaleString('en-PH')}
             </div>
-            <div style={{ fontSize: 11, color: '#2d3748', marginTop: 3 }}>per person · all fees</div>
+            <div style={{ fontSize: 11, color: '#2d3748', marginTop: 3 }}>from price · verify before booking</div>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
             <button className="alert-btn" onClick={() => setShowAlert(true)}>🔔 Alert me</button>
@@ -316,6 +316,11 @@ export default function FlightCard({ offer, dictionaries = {}, index = 0 }) {
               Book Now ↗
             </a>
           </div>
+        </div>
+
+        {/* Price disclaimer */}
+        <div style={{ marginTop: 14, padding: '8px 10px', background: 'rgba(30,58,138,0.08)', borderRadius: 8, fontSize: 11, color: '#2d3748', textAlign: 'center' }}>
+          💡 Price is a historical estimate. Final fare confirmed when you click Book Now.
         </div>
       </div>
 
