@@ -233,7 +233,7 @@ export default function FlightCard({ offer, dictionaries = {}, index = 0 }) {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
           <div>
             <div style={{ fontSize: 28, fontWeight: 700, color: '#e2e8f0', fontFamily: "'Space Grotesk', sans-serif", letterSpacing: '-1px', lineHeight: 1 }}>
-              {currency === 'PHP' ? '₱' : currency}{price.toLocaleString()}
+              {currency === 'PHP' ? '₱' : currency}{price.toLocaleString('en-PH')}
             </div>
             <div style={{ fontSize: 11, color: '#2d3748', marginTop: 3 }}>per person · all fees</div>
           </div>

@@ -1,5 +1,5 @@
-import { useState, useCallback } from 'react';
-import { searchFlights } from '../services/flightService';
+import { useState, useCallback, useEffect } from 'react';
+import { searchFlights, getPopular } from '../services/flightService';
 
 const INITIAL_FORM = {
   originLocationCode: '',
@@ -15,15 +15,38 @@ const INITIAL_FORM = {
 
 export function useFlightSearch() {
   const [form, setForm] = useState(INITIAL_FORM);
-  const [results, setResults] = useState(null);       // null = no search yet
+  const [results, setResults] = useState(null);
   const [dictionaries, setDictionaries] = useState(null);
   const [cachedAt, setCachedAt] = useState(null);
+  const [isPopular, setIsPopular] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   function updateForm(field, value) {
     setForm((prev) => ({ ...prev, [field]: value }));
   }
+
+  const loadPopular = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const data = await getPopular();
+      setResults(data.data || []);
+      setDictionaries(data.dictionaries || {});
+      setCachedAt(data.cachedAt || Date.now());
+      setIsPopular(true);
+    } catch (err) {
+      setError(err.message);
+      setResults([]);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  // Load popular deals on mount
+  useEffect(() => {
+    loadPopular();
+  }, [loadPopular]);
 
   const search = useCallback(async () => {
     if (!form.originLocationCode || !form.destinationLocationCode || !form.departureDate) {
@@ -42,6 +65,7 @@ export function useFlightSearch() {
       setResults(data.data || []);
       setDictionaries(data.dictionaries || {});
       setCachedAt(data.cachedAt || Date.now());
+      setIsPopular(false);
     } catch (err) {
       setError(err.message);
       setResults([]);
@@ -54,7 +78,8 @@ export function useFlightSearch() {
     setResults(null);
     setError(null);
     setCachedAt(null);
+    setIsPopular(false);
   }
 
-  return { form, updateForm, results, dictionaries, cachedAt, loading, error, search, clearResults };
+  return { form, updateForm, results, dictionaries, cachedAt, isPopular, loading, error, search, clearResults };
 }

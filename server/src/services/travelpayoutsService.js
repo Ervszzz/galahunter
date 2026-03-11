@@ -15,8 +15,15 @@ function buildBookingUrl(origin, destination, departDate, passengers = 1) {
   return `https://www.aviasales.com/search/${origin}${day}${month}${destination}${passengers}?marker=${MARKER}`;
 }
 
-// Normalize TravelPayouts /v1/prices/cheap response to Amadeus-compatible shape
-// so all frontend components work without changes
+// Convert minutes to ISO 8601 duration string (e.g. 160 → "PT2H40M")
+function minutesToIso(mins) {
+  if (!mins) return '';
+  const h = Math.floor(mins / 60);
+  const m = mins % 60;
+  return `PT${h > 0 ? h + 'H' : ''}${m > 0 ? m + 'M' : ''}`;
+}
+
+// Normalize /v1/prices/cheap response to shared offer shape
 function normalizeOffers(origin, destination, destData, currency, departDate, passengers) {
   if (!destData || typeof destData !== 'object') return [];
 
@@ -24,7 +31,6 @@ function normalizeOffers(origin, destination, destData, currency, departDate, pa
     const depAt = offer.departure_at || `${departDate}T00:00:00`;
     const stops = offer.transfers ?? 0;
 
-    // Build minimal segments array (1 segment per offer from TP cheap API)
     const segments = [
       {
         departure: { iataCode: origin, at: depAt },
@@ -33,8 +39,6 @@ function normalizeOffers(origin, destination, destData, currency, departDate, pa
         number: String(offer.flight_number || ''),
       },
     ];
-
-    // Add a placeholder stop segment so stop count displays correctly
     for (let i = 0; i < stops; i++) {
       segments.push({ departure: {}, arrival: {}, carrierCode: '', number: '' });
     }
@@ -47,6 +51,33 @@ function normalizeOffers(origin, destination, destData, currency, departDate, pa
       bookingUrl: buildBookingUrl(origin, destination, depAt.split('T')[0], passengers),
     };
   });
+}
+
+// Normalize /v2/prices/latest response to shared offer shape
+const CABIN_MAP = { 0: 'ECONOMY', 1: 'BUSINESS', 2: 'FIRST' };
+
+function normalizePopularOffer(item, passengers = 1) {
+  const { origin, destination, depart_date, value, duration, number_of_changes, trip_class } = item;
+  const stops = number_of_changes ?? 0;
+
+  const segments = [
+    {
+      departure: { iataCode: origin, at: depart_date ? `${depart_date}T00:00:00` : '' },
+      arrival:   { iataCode: destination, at: '' },
+      carrierCode: '',
+      number: '',
+    },
+    ...Array(stops).fill({ departure: {}, arrival: {}, carrierCode: '', number: '' }),
+  ];
+
+  return {
+    id: `popular-${origin}-${destination}-${depart_date}`,
+    price: { total: String(value), currency: 'PHP' },
+    itineraries: [{ duration: minutesToIso(duration), segments }],
+    travelClass: CABIN_MAP[trip_class] ?? 'ECONOMY',
+    numberOfBookableSeats: null,
+    bookingUrl: buildBookingUrl(origin, destination, depart_date, passengers),
+  };
 }
 
 async function searchFlights({
@@ -112,7 +143,8 @@ async function getPopular({ origin = 'MNL', currency = 'PHP', limit = 30 } = {})
     params: { origin, currency, token: TOKEN, limit },
   });
 
-  const result = { data, cachedAt: Date.now() };
+  const offers = (data.data || []).map((item) => normalizePopularOffer(item));
+  const result = { data: offers, dictionaries: {}, cachedAt: Date.now() };
   cache.set(cacheKey, result);
   return result;
 }

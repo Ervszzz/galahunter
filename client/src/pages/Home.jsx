@@ -2,7 +2,7 @@ import { useState, useMemo } from 'react';
 import { useFlightSearch } from '../hooks/useFlightSearch';
 import SearchForm from '../components/SearchForm';
 import FlightCard from '../components/FlightCard';
-import LoadingSpinner from '../components/LoadingSpinner';
+import SkeletonCard from '../components/SkeletonCard';
 
 const STOP_TAGS = ['All', 'Non-stop ✈', '1 Stop 🔄', '2+ Stops 🛑'];
 
@@ -16,7 +16,7 @@ const POPULAR_ROUTES = [
 ];
 
 export default function Home() {
-  const { form, updateForm, results, dictionaries, cachedAt, loading, error, search } = useFlightSearch();
+  const { form, updateForm, results, dictionaries, cachedAt, isPopular, loading, error, search } = useFlightSearch();
   const [activeTag, setActiveTag] = useState('All');
   const [sortBy, setSortBy]       = useState('price');
 
@@ -68,8 +68,8 @@ export default function Home() {
         {/* Search form row */}
         <SearchForm form={form} updateForm={updateForm} onSearch={search} loading={loading} />
 
-        {/* Tag filters + sort (only shown after search) */}
-        {filtered !== null && (
+        {/* Tag filters + sort — shown after a user search */}
+        {filtered !== null && !isPopular && (
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12, marginTop: 16 }}>
             <div style={{ display: 'flex', gap: 8, overflowX: 'auto', paddingBottom: 2 }}>
               {STOP_TAGS.map((t) => (
@@ -102,8 +102,12 @@ export default function Home() {
         </div>
       )}
 
-      {/* Loading */}
-      {loading && <LoadingSpinner />}
+      {/* Loading skeletons */}
+      {loading && (
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: 16 }}>
+          {Array(6).fill(null).map((_, i) => <SkeletonCard key={i} />)}
+        </div>
+      )}
 
       {/* Results */}
       {!loading && filtered !== null && (
@@ -111,7 +115,10 @@ export default function Home() {
           {/* Stats row */}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 22 }}>
             <p style={{ color: '#2d3748', fontSize: 14 }}>
-              <span style={{ color: '#e2e8f0', fontWeight: 600 }}>{filtered.length}</span> deal{filtered.length !== 1 ? 's' : ''} found
+              {isPopular
+                ? <><span style={{ color: '#e2e8f0', fontWeight: 600 }}>Popular deals</span> from Manila</>
+                : <><span style={{ color: '#e2e8f0', fontWeight: 600 }}>{filtered.length}</span> deal{filtered.length !== 1 ? 's' : ''} found</>
+              }
             </p>
             <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, color: '#2d3748' }}>
               <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#3b5fc0', display: 'inline-block', animation: 'pulse-dot 2s infinite' }} />
@@ -120,9 +127,14 @@ export default function Home() {
           </div>
 
           {filtered.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: '80px 20px', color: '#2d3748' }}>
+            <div style={{ textAlign: 'center', padding: '80px 20px' }}>
               <div style={{ fontSize: 52, marginBottom: 16, animation: 'float 3s infinite' }}>🛫</div>
-              <p style={{ fontSize: 16 }}>No flights match your filters. Try adjusting them.</p>
+              <p style={{ fontSize: 16, fontWeight: 600, color: '#e2e8f0', fontFamily: "'Space Grotesk', sans-serif", marginBottom: 8 }}>
+                No flights found
+              </p>
+              <p style={{ fontSize: 14, color: '#4a5568' }}>
+                Try different dates or a different route.
+              </p>
             </div>
           ) : (
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: 16 }}>
@@ -132,14 +144,6 @@ export default function Home() {
             </div>
           )}
         </>
-      )}
-
-      {/* Empty state before first search */}
-      {!loading && filtered === null && !error && (
-        <div style={{ textAlign: 'center', padding: '80px 20px', color: '#2d3748' }}>
-          <div style={{ fontSize: 52, marginBottom: 16, animation: 'float 3s infinite' }}>✈️</div>
-          <p style={{ fontSize: 16 }}>Enter a route above and search for deals.</p>
-        </div>
       )}
     </div>
   );
