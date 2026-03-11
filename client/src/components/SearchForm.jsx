@@ -1,3 +1,5 @@
+import AirportInput from './AirportInput';
+
 const today = new Date().toISOString().split('T')[0];
 
 export default function SearchForm({ form, updateForm, onSearch, loading }) {
@@ -6,23 +8,15 @@ export default function SearchForm({ form, updateForm, onSearch, loading }) {
       onSubmit={(e) => { e.preventDefault(); onSearch(); }}
       style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginBottom: 16 }}
     >
-      <input
-        className="gh-input"
-        placeholder="From (IATA) — e.g. MNL"
-        maxLength={3}
-        value={form.originLocationCode}
-        onChange={(e) => updateForm('originLocationCode', e.target.value.toUpperCase())}
-        style={{ flex: 1, minWidth: 130, textTransform: 'uppercase', fontFamily: 'monospace', letterSpacing: 2 }}
-        required
+      <AirportInput
+        placeholder="From — city or country"
+        onSelect={(code) => updateForm('originLocationCode', code)}
+        style={{ flex: 1, minWidth: 180 }}
       />
-      <input
-        className="gh-input"
-        placeholder="To (IATA) — e.g. SIN"
-        maxLength={3}
-        value={form.destinationLocationCode}
-        onChange={(e) => updateForm('destinationLocationCode', e.target.value.toUpperCase())}
-        style={{ flex: 1, minWidth: 130, textTransform: 'uppercase', fontFamily: 'monospace', letterSpacing: 2 }}
-        required
+      <AirportInput
+        placeholder="To — city or country"
+        onSelect={(code) => updateForm('destinationLocationCode', code)}
+        style={{ flex: 1, minWidth: 180 }}
       />
       <input
         type="date"
@@ -31,7 +25,6 @@ export default function SearchForm({ form, updateForm, onSearch, loading }) {
         value={form.departureDate}
         onChange={(e) => updateForm('departureDate', e.target.value)}
         style={{ flex: 1, minWidth: 155 }}
-        required
       />
       <input
         type="date"
@@ -39,7 +32,6 @@ export default function SearchForm({ form, updateForm, onSearch, loading }) {
         min={form.departureDate || today}
         value={form.returnDate}
         onChange={(e) => updateForm('returnDate', e.target.value)}
-        placeholder="Return (optional)"
         style={{ flex: 1, minWidth: 155 }}
       />
       <select

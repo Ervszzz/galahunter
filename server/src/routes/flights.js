@@ -1,18 +1,35 @@
 const express = require('express');
+const axios = require('axios');
 const router = express.Router();
 const { searchFlights, getCalendar, getPopular } = require('../services/travelpayoutsService');
 
+// GET /api/flights/airports?term=manila
+// Proxies TravelPayouts Places2 autocomplete (no auth required)
+router.get('/airports', async (req, res, next) => {
+  try {
+    const { term } = req.query;
+    if (!term || term.length < 2) return res.json([]);
+
+    const { data } = await axios.get(
+      `https://autocomplete.travelpayouts.com/places2?term=${encodeURIComponent(term)}&locale=en&types[]=city&types[]=airport&limit=7`
+    );
+    res.json(data);
+  } catch (err) {
+    next(err);
+  }
+});
+
 // GET /api/flights/search
-// Query: { originLocationCode, destinationLocationCode, departureDate, returnDate?,
-//          adults?, currencyCode? }
+// Query: { originLocationCode, destinationLocationCode, departureDate?(optional),
+//          returnDate?, adults?, currencyCode? }
 router.get('/search', async (req, res, next) => {
   try {
-    const { originLocationCode, destinationLocationCode, departureDate } = req.query;
+    const { originLocationCode, destinationLocationCode } = req.query;
 
-    if (!originLocationCode || !destinationLocationCode || !departureDate) {
+    if (!originLocationCode || !destinationLocationCode) {
       return res.status(400).json({
         error: 'Missing required fields',
-        detail: 'originLocationCode, destinationLocationCode, and departureDate are required',
+        detail: 'originLocationCode and destinationLocationCode are required',
       });
     }
 

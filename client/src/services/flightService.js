@@ -57,3 +57,13 @@ export async function getPopular(params) {
   const { data } = await api.get('/flights/popular', { params });
   return data;
 }
+
+/**
+ * Autocomplete airport/city search via GET /api/flights/airports
+ * @param {string} term  — e.g. "Manila" or "Sin"
+ * Returns array of { id, name, country_name, code, type }
+ */
+export async function searchAirports(term) {
+  const { data } = await api.get('/flights/airports', { params: { term } });
+  return data;
+}
