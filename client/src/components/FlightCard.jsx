@@ -48,35 +48,8 @@ const CITY_NAMES = {
   AKL: 'Auckland',     NAN: 'Nadi',
 };
 
-// Format YYYY-MM-DD → DDMMMYYYY (e.g. 2026-10-03 → 03OCT2026) for Cebu Pacific
-function toCebFormat(isoDate) {
-  if (!isoDate) return '';
-  const [y, m, d] = isoDate.split('-');
-  const months = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
-  return `${d}${months[parseInt(m, 10) - 1]}${y}`;
-}
-
 function getBookingUrl(carrierCode, fromCode, toCode, departDate) {
-  // departDate expected as YYYY-MM-DD
   const date = departDate ? departDate.split('T')[0] : '';
-
-  if (carrierCode === '5J') {
-    // Cebu Pacific — pre-filled search
-    const dd = toCebFormat(date);
-    return `https://book.cebupacificair.com/Search?o1=${fromCode}&d1=${toCode}${dd ? `&dd1=${dd}` : ''}&adt=1&chd=0&inf=0&s=true`;
-  }
-
-  if (['Z2', 'AK', 'FD', 'QZ'].includes(carrierCode)) {
-    // AirAsia — pre-filled search
-    return `https://www.airasia.com/en/book/flight-search.html?lang=en&org=${fromCode}&dest=${toCode}${date ? `&d=${date}` : ''}&t=1&a=1&c=0&i=0`;
-  }
-
-  if (['PR', '2P'].includes(carrierCode)) {
-    // Philippine Airlines — pre-filled search
-    return `https://www.philippineairlines.com/en/ph/home/book-a-flight?origin=${fromCode}&destination=${toCode}${date ? `&departDate=${date}` : ''}&type=OW`;
-  }
-
-  // Kiwi.com fallback for international/unknown carriers
   return `https://www.kiwi.com/en/search/results/${fromCode}/${toCode}${date ? `/${date}/no-return` : ''}`;
 }
 
