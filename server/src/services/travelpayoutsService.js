@@ -53,32 +53,8 @@ function normalizeOffers(origin, destination, destData, currency, departDate, pa
   });
 }
 
-// Normalize /v2/prices/latest response to shared offer shape
-const CABIN_MAP = { 0: 'ECONOMY', 1: 'BUSINESS', 2: 'FIRST' };
-
-function normalizePopularOffer(item, passengers = 1) {
-  const { origin, destination, depart_date, value, duration, number_of_changes, trip_class, airline } = item;
-  const stops = number_of_changes ?? 0;
-
-  const segments = [
-    {
-      departure: { iataCode: origin, at: depart_date ? `${depart_date}T00:00:00` : '' },
-      arrival:   { iataCode: destination, at: '' },
-      carrierCode: airline || '',
-      number: '',
-    },
-    ...Array(stops).fill({ departure: {}, arrival: {}, carrierCode: '', number: '' }),
-  ];
-
-  return {
-    id: `popular-${origin}-${destination}-${depart_date}`,
-    price: { total: String(value), currency: 'PHP' },
-    itineraries: [{ duration: minutesToIso(duration), segments }],
-    travelClass: CABIN_MAP[trip_class] ?? 'ECONOMY',
-    numberOfBookableSeats: null,
-    bookingUrl: buildBookingUrl(origin, destination, depart_date, passengers),
-  };
-}
+// Popular routes to fetch for the home page
+const POPULAR_DESTINATIONS = ['SIN', 'NRT', 'HKG', 'ICN', 'BKK', 'DXB', 'KUL', 'CEB', 'DVO', 'TAC', 'KIX', 'DOH', 'SYD', 'ILO'];
 
 async function searchFlights({
   originLocationCode,
@@ -134,16 +110,36 @@ async function getCalendar({ origin, destination, month, currency = 'PHP' }) {
   return result;
 }
 
-async function getPopular({ origin = 'MNL', currency = 'PHP', limit = 30 } = {}) {
+async function getPopular({ origin = 'MNL', currency = 'PHP' } = {}) {
   const cacheKey = `popular:${origin}:${currency}`;
   const cached = cache.get(cacheKey);
   if (cached) return cached;
 
-  const { data } = await axios.get(`${TP_BASE}/v2/prices/latest`, {
-    params: { origin, currency, token: TOKEN, limit },
+  // Use /v1/prices/cheap per route — it includes the airline code unlike /v2/prices/latest
+  const responses = await Promise.allSettled(
+    POPULAR_DESTINATIONS.map((dest) =>
+      axios.get(`${TP_BASE}/v1/prices/cheap`, {
+        params: { origin, destination: dest, currency, token: TOKEN },
+      })
+    )
+  );
+
+  const offers = [];
+  responses.forEach((res, i) => {
+    if (res.status !== 'fulfilled' || !res.value.data.success) return;
+    const dest = POPULAR_DESTINATIONS[i];
+    const destData = res.value.data.data?.[dest] || {};
+    const normalized = normalizeOffers(origin, dest, destData, currency);
+    if (normalized.length === 0) return;
+    // Pick the cheapest offer for this route
+    const cheapest = normalized.reduce((a, b) =>
+      parseFloat(a.price.total) <= parseFloat(b.price.total) ? a : b
+    );
+    offers.push({ ...cheapest, id: `popular-${origin}-${dest}` });
   });
 
-  const offers = (data.data || []).map((item) => normalizePopularOffer(item));
+  offers.sort((a, b) => parseFloat(a.price.total) - parseFloat(b.price.total));
+
   const result = { data: offers, dictionaries: {}, cachedAt: Date.now() };
   cache.set(cacheKey, result);
   return result;
