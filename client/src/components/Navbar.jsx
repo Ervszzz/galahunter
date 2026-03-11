@@ -19,9 +19,10 @@ export default function Navbar() {
             boxShadow: '0 4px 16px rgba(59,93,192,0.3)',
             flexShrink: 0,
           }}>
-            <svg width="26" height="20" viewBox="0 0 26 20" fill="none">
-              <text x="0" y="16" fontSize="16" fontWeight="700" fill="white"
-                fontFamily="Space Grotesk, sans-serif" letterSpacing="-1">GH</text>
+            <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+              <text x="20" y="20" fontSize="14" fontWeight="700" fill="white"
+                fontFamily="Space Grotesk, sans-serif" letterSpacing="-0.5"
+                textAnchor="middle" dominantBaseline="central">GH</text>
             </svg>
           </div>
           <div>
