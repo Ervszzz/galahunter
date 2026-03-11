@@ -1,0 +1,85 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    color-scheme: dark;
+  }
+  body {
+    @apply bg-gh-bg text-gh-body font-sans;
+    margin: 0;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Space Grotesk', system-ui, sans-serif;
+  }
+  /* Dark calendar/date picker */
+  input[type='date']::-webkit-calendar-picker-indicator {
+    filter: invert(0.6);
+  }
+  /* Dark select options */
+  select option {
+    background-color: #0e1422;
+    color: #e2e8f0;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply text-white font-semibold py-2.5 px-6 rounded-xl
+           transition-all duration-200 active:scale-95
+           disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100;
+    background: linear-gradient(135deg, #3b5fc0, #1e3a8a);
+  }
+  .btn-primary:hover:not(:disabled) {
+    box-shadow: 0 0 24px rgba(59, 93, 192, 0.45);
+  }
+
+  .btn-secondary {
+    @apply bg-gh-pill text-gh-body font-semibold py-2.5 px-6 rounded-xl
+           border border-gh-border transition-all duration-200 active:scale-95;
+  }
+  .btn-secondary:hover {
+    @apply border-gh-accent;
+  }
+
+  .btn-danger {
+    @apply text-red-400 hover:text-red-300 font-medium transition-colors duration-200;
+  }
+
+  .card {
+    @apply bg-gh-card rounded-2xl border border-gh-border p-6 transition-all duration-200;
+  }
+  .card:hover {
+    border-color: #2a3a6e;
+    box-shadow: 0 8px 32px rgba(59, 93, 201, 0.15);
+  }
+
+  .input-field {
+    @apply w-full bg-gh-card border border-gh-border rounded-xl px-4 py-2.5 text-sm
+           text-gh-body placeholder-gh-muted
+           focus:outline-none focus:ring-0 focus:border-gh-accent
+           transition-colors duration-200;
+  }
+
+  .pill {
+    @apply bg-gh-pill border border-gh-border rounded-full px-4 py-1.5 text-sm
+           text-gh-body transition-all duration-150;
+  }
+  .pill:hover {
+    @apply border-gh-accent text-gh-light;
+  }
+
+  .badge-discount {
+    @apply text-xs font-semibold px-2.5 py-0.5 rounded-full;
+    background: linear-gradient(135deg, #1e3a8a, #3b5fc0);
+    color: #93b4ff;
+  }
+
+  .label {
+    @apply block text-sm font-medium text-gh-body mb-1.5;
+  }
+  .label-muted {
+    @apply text-gh-muted font-normal;
+  }
+}
