@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useAlerts } from '../hooks/useAlerts';
 
-const INITIAL_FORM = { origin: '', destination: '', maxPrice: '', currency: 'PHP' };
+const INITIAL_FORM = { origin: '', destination: '', maxPrice: '', currency: 'PHP', email: '' };
 
 export default function Alerts() {
   const { alerts, addAlert, removeAlert, toggleAlert } = useAlerts();
@@ -22,159 +22,111 @@ export default function Alerts() {
   }
 
   return (
-    <div className="space-y-8">
-      <div>
-        <h1 className="font-heading text-3xl font-semibold" style={{ color: 'var(--gh-body)' }}>
+    <div>
+      <div style={{ marginBottom: 28 }}>
+        <h1 style={{ fontSize: 28, fontWeight: 700, fontFamily: "'Space Grotesk', sans-serif", color: '#e2e8f0', marginBottom: 6 }}>
           Price Alerts
         </h1>
-        <p className="text-sm mt-1" style={{ color: 'var(--gh-muted)' }}>
-          Set a target price. We&apos;ll track routes so you know when to book.
+        <p style={{ color: '#4a5568', fontSize: 14 }}>
+          Set a target price. We&apos;ll watch routes so you know when to book.
         </p>
       </div>
 
-      {/* Create Alert Form */}
-      <form className="card space-y-4" onSubmit={handleSubmit}>
-        <h2 className="font-heading text-lg font-semibold" style={{ color: 'var(--gh-body)' }}>
-          Create New Alert
+      {/* Create Alert */}
+      <div className="card" style={{ marginBottom: 24 }}>
+        <h2 style={{ fontSize: 18, fontWeight: 700, fontFamily: "'Space Grotesk', sans-serif", color: '#e2e8f0', marginBottom: 20 }}>
+          🔔 Create New Alert
         </h2>
 
         {submitted && (
-          <div
-            className="rounded-xl px-4 py-3 text-sm"
-            style={{
-              backgroundColor: 'rgba(20,83,45,0.3)',
-              border: '1px solid rgba(22,101,52,0.5)',
-              color: '#86efac',
-            }}
-          >
-            ✅ Alert created! We&apos;ll watch this route for you.
+          <div style={{ background: 'rgba(20,83,45,0.3)', border: '1px solid rgba(22,101,52,0.5)', color: '#86efac', borderRadius: 10, padding: '12px 16px', fontSize: 14, marginBottom: 16 }}>
+            ✅ Alert created! We'll watch this route for you.
           </div>
         )}
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label className="label">
-              From <span className="label-muted">(IATA)</span>
-            </label>
-            <input
-              className="input-field uppercase font-mono tracking-widest"
-              placeholder="MNL"
-              maxLength={3}
-              value={form.origin}
-              onChange={(e) => update('origin', e.target.value.toUpperCase())}
-              required
-            />
+        <form onSubmit={handleSubmit} style={{ display: 'flex', flexWrap: 'wrap', gap: 12 }}>
+          <div style={{ flex: 1, minWidth: 120 }}>
+            <label className="label">From (IATA)</label>
+            <input className="gh-input" placeholder="MNL" maxLength={3}
+              value={form.origin} onChange={(e) => update('origin', e.target.value.toUpperCase())}
+              style={{ textTransform: 'uppercase', fontFamily: 'monospace', letterSpacing: 2 }} required />
           </div>
-
-          <div>
-            <label className="label">
-              To <span className="label-muted">(IATA)</span>
-            </label>
-            <input
-              className="input-field uppercase font-mono tracking-widest"
-              placeholder="SIN"
-              maxLength={3}
-              value={form.destination}
-              onChange={(e) => update('destination', e.target.value.toUpperCase())}
-              required
-            />
+          <div style={{ flex: 1, minWidth: 120 }}>
+            <label className="label">To (IATA)</label>
+            <input className="gh-input" placeholder="SIN" maxLength={3}
+              value={form.destination} onChange={(e) => update('destination', e.target.value.toUpperCase())}
+              style={{ textTransform: 'uppercase', fontFamily: 'monospace', letterSpacing: 2 }} required />
           </div>
-
-          <div>
-            <label className="label">Max Price ({form.currency})</label>
-            <input
-              type="number"
-              className="input-field"
-              placeholder="5000"
-              min={1}
-              value={form.maxPrice}
-              onChange={(e) => update('maxPrice', e.target.value)}
-              required
-            />
+          <div style={{ flex: 1, minWidth: 140 }}>
+            <label className="label">Max Price</label>
+            <input type="number" className="gh-input" placeholder="5000" min={1}
+              value={form.maxPrice} onChange={(e) => update('maxPrice', e.target.value)} required />
           </div>
-
-          <div>
+          <div style={{ flex: '0 0 auto', width: 120 }}>
             <label className="label">Currency</label>
-            <select
-              className="input-field"
-              value={form.currency}
-              onChange={(e) => update('currency', e.target.value)}
-            >
-              <option value="PHP">PHP — Philippine Peso</option>
-              <option value="USD">USD — US Dollar</option>
-              <option value="EUR">EUR — Euro</option>
-              <option value="SGD">SGD — Singapore Dollar</option>
-              <option value="JPY">JPY — Japanese Yen</option>
+            <select className="gh-input" value={form.currency} onChange={(e) => update('currency', e.target.value)}>
+              <option value="PHP">PHP</option>
+              <option value="USD">USD</option>
+              <option value="EUR">EUR</option>
+              <option value="SGD">SGD</option>
             </select>
           </div>
-        </div>
+          <div style={{ flex: 2, minWidth: 200 }}>
+            <label className="label">Email (optional)</label>
+            <input type="email" className="gh-input" placeholder="you@email.com"
+              value={form.email} onChange={(e) => update('email', e.target.value)} />
+          </div>
+          <div style={{ display: 'flex', alignItems: 'flex-end' }}>
+            <button type="submit" className="book-btn" style={{ padding: '11px 24px' }}>
+              Set Alert →
+            </button>
+          </div>
+        </form>
+      </div>
 
-        <button type="submit" className="btn-primary">
-          🔔 Create Alert
-        </button>
-      </form>
-
-      {/* Alert List */}
+      {/* Alert list */}
       {alerts.length === 0 ? (
-        <div className="card text-center py-16">
-          <p className="text-4xl mb-4">🔕</p>
-          <p className="text-base font-medium" style={{ color: 'var(--gh-body)' }}>
-            No alerts yet
-          </p>
-          <p className="text-sm mt-1" style={{ color: 'var(--gh-muted)' }}>
-            Create one above to start tracking prices.
-          </p>
+        <div className="card" style={{ textAlign: 'center', padding: '60px 20px' }}>
+          <div style={{ fontSize: 48, marginBottom: 16 }}>🔕</div>
+          <p style={{ fontSize: 16, color: '#e2e8f0', fontFamily: "'Space Grotesk', sans-serif", marginBottom: 6 }}>No alerts yet</p>
+          <p style={{ fontSize: 13, color: '#4a5568' }}>Create one above to start tracking prices.</p>
         </div>
       ) : (
-        <div className="space-y-3">
-          <h2 className="font-heading text-base font-semibold" style={{ color: 'var(--gh-muted)' }}>
+        <div>
+          <p style={{ fontSize: 13, color: '#2d3748', marginBottom: 14 }}>
             {alerts.length} alert{alerts.length !== 1 ? 's' : ''}
-          </h2>
-          {alerts.map((alert) => (
-            <div
-              key={alert.id}
-              className={`card flex items-center justify-between gap-4 transition-opacity ${
-                !alert.active ? 'opacity-40' : ''
-              }`}
-            >
-              <div className="flex items-center gap-3 min-w-0">
-                <span
-                  className="shrink-0 w-2 h-2 rounded-full"
-                  style={{
-                    backgroundColor: alert.active ? 'var(--gh-light)' : 'var(--gh-muted)',
-                  }}
-                />
-                <div className="min-w-0">
-                  <p className="font-semibold" style={{ color: 'var(--gh-body)' }}>
-                    {alert.origin} → {alert.destination}
-                  </p>
-                  <p className="text-xs truncate" style={{ color: 'var(--gh-muted)' }}>
-                    Max {alert.currency}{' '}
-                    {parseFloat(alert.maxPrice).toLocaleString()} &middot; Added{' '}
-                    {new Date(alert.createdAt).toLocaleDateString('en-PH', {
-                      month: 'short',
-                      day: 'numeric',
-                    })}
-                  </p>
+          </p>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+            {alerts.map((alert) => (
+              <div
+                key={alert.id}
+                className="card"
+                style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, padding: 18, opacity: alert.active ? 1 : 0.4 }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                  <span style={{ width: 8, height: 8, borderRadius: '50%', background: alert.active ? '#6389ff' : '#4a5568', display: 'inline-block', animation: alert.active ? 'pulse-dot 2s infinite' : 'none', flexShrink: 0 }} />
+                  <div>
+                    <p style={{ fontWeight: 600, color: '#e2e8f0', fontFamily: "'Space Grotesk', sans-serif", fontSize: 15 }}>
+                      {alert.origin} → {alert.destination}
+                    </p>
+                    <p style={{ fontSize: 12, color: '#4a5568', marginTop: 2 }}>
+                      Max {alert.currency} {parseFloat(alert.maxPrice).toLocaleString()}
+                      {alert.email && ` · ${alert.email}`}
+                      {' · '}Added {new Date(alert.createdAt).toLocaleDateString('en-PH', { month: 'short', day: 'numeric' })}
+                    </p>
+                  </div>
+                </div>
+                <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
+                  <button className="alert-btn" style={{ padding: '7px 14px', fontSize: 12 }} onClick={() => toggleAlert(alert.id)}>
+                    {alert.active ? 'Pause' : 'Activate'}
+                  </button>
+                  <button onClick={() => removeAlert(alert.id)} style={{ background: 'transparent', border: 'none', color: '#f87171', cursor: 'pointer', fontSize: 12, fontWeight: 500, padding: '7px 10px' }}>
+                    Remove
+                  </button>
                 </div>
               </div>
-
-              <div className="flex items-center gap-2 shrink-0">
-                <button
-                  onClick={() => toggleAlert(alert.id)}
-                  className="btn-secondary text-sm py-1.5 px-3"
-                >
-                  {alert.active ? 'Pause' : 'Activate'}
-                </button>
-                <button
-                  onClick={() => removeAlert(alert.id)}
-                  className="btn-danger text-sm px-2"
-                >
-                  Remove
-                </button>
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       )}
     </div>

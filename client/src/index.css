@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ── Design tokens ──────────────────────────────────── */
+/* ── Design tokens ─────────────────────────── */
 :root {
   --gh-bg:           #07090f;
   --gh-card:         #0e1422;
@@ -11,16 +11,33 @@
   --gh-accent:       #3b5fc0;
   --gh-light:        #6389ff;
   --gh-muted:        #4a5568;
+  --gh-dim:          #2d3748;
   --gh-body:         #e2e8f0;
   --gh-navy:         #1e3a8a;
   --gh-pill:         #111827;
 }
 
-/* ── Base ───────────────────────────────────────────── */
+/* ── Animations ────────────────────────────── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-6px); }
+}
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.3; }
+}
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+
+/* ── Base ──────────────────────────────────── */
 @layer base {
-  html {
-    color-scheme: dark;
-  }
+  html { color-scheme: dark; }
   body {
     background-color: var(--gh-bg);
     color: var(--gh-body);
@@ -30,94 +47,156 @@
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Space Grotesk', system-ui, sans-serif;
   }
-  input[type='date']::-webkit-calendar-picker-indicator {
-    filter: invert(0.6);
-  }
-  select option {
-    background-color: #0e1422;
-    color: #e2e8f0;
-  }
+  input[type='date']::-webkit-calendar-picker-indicator { filter: invert(0.5); }
+  input[type='range'] { accent-color: var(--gh-accent); }
+  select option { background-color: #0e1422; color: #e2e8f0; }
+
+  ::-webkit-scrollbar { width: 4px; height: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--gh-border); border-radius: 2px; }
 }
 
-/* ── Components ─────────────────────────────────────── */
+/* ── Components ────────────────────────────── */
 @layer components {
-  .btn-primary {
-    @apply text-white font-semibold py-2.5 px-6 rounded-xl
-           transition-all duration-200 active:scale-95
-           disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100;
-    background: linear-gradient(135deg, var(--gh-accent), var(--gh-navy));
-  }
-  .btn-primary:hover:not(:disabled) {
-    box-shadow: 0 0 24px rgba(59, 93, 192, 0.45);
-  }
 
-  .btn-secondary {
-    @apply font-semibold py-2.5 px-6 rounded-xl
-           border transition-all duration-200 active:scale-95;
-    background-color: var(--gh-pill);
-    color: var(--gh-body);
-    border-color: var(--gh-border);
-  }
-  .btn-secondary:hover {
-    border-color: var(--gh-accent);
-  }
-
-  .btn-danger {
-    @apply font-medium transition-colors duration-200;
-    color: #f87171;
-  }
-  .btn-danger:hover {
-    color: #fca5a5;
-  }
-
+  /* --- Cards --- */
   .card {
-    @apply rounded-2xl p-6 transition-all duration-200;
     background-color: var(--gh-card);
     border: 1px solid var(--gh-border);
+    border-radius: 18px;
+    padding: 22px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    animation: fadeUp 0.4s ease both;
+  }
+  .card::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(99,137,255,0.4), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
   }
   .card:hover {
+    transform: translateY(-5px);
     border-color: var(--gh-border-hover);
-    box-shadow: 0 8px 32px rgba(59, 93, 201, 0.15);
+    box-shadow: 0 24px 60px rgba(59, 93, 201, 0.15);
+  }
+  .card:hover::after { opacity: 1; }
+
+  /* --- Buttons --- */
+  .book-btn {
+    background: linear-gradient(135deg, var(--gh-accent), var(--gh-navy));
+    border: none;
+    color: #fff;
+    padding: 9px 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    font-family: 'Space Grotesk', sans-serif;
+    transition: all 0.2s;
+    letter-spacing: 0.2px;
+    white-space: nowrap;
+  }
+  .book-btn:hover {
+    background: linear-gradient(135deg, #4a6fd4, #2a4aa0);
+    box-shadow: 0 4px 20px rgba(59, 93, 192, 0.4);
+    transform: translateY(-1px);
   }
 
-  .input-field {
-    @apply w-full rounded-xl px-4 py-2.5 text-sm
-           focus:outline-none focus:ring-0
-           transition-colors duration-200;
-    background-color: var(--gh-card);
+  .alert-btn {
+    background: transparent;
     border: 1px solid var(--gh-border);
-    color: var(--gh-body);
-  }
-  .input-field::placeholder {
     color: var(--gh-muted);
+    padding: 9px 14px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 13px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 500;
+    transition: all 0.2s;
+    white-space: nowrap;
   }
-  .input-field:focus {
-    border-color: var(--gh-accent);
-  }
+  .alert-btn:hover { border-color: var(--gh-border-hover); color: #93b4ff; }
 
-  .pill {
-    @apply rounded-full px-4 py-1.5 text-sm transition-all duration-150;
-    background-color: var(--gh-pill);
+  .save-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 20px;
+    transition: transform 0.2s;
+    line-height: 1;
+    padding: 4px;
+  }
+  .save-btn:hover { transform: scale(1.25); }
+
+  /* --- Tag filter pills --- */
+  .tag-btn {
     border: 1px solid var(--gh-border);
-    color: var(--gh-body);
+    background: transparent;
+    color: var(--gh-muted);
+    padding: 7px 16px;
+    border-radius: 999px;
+    cursor: pointer;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 0.2s;
+    white-space: nowrap;
   }
-  .pill:hover {
+  .tag-btn.active {
+    background: var(--gh-navy);
     border-color: var(--gh-accent);
-    color: var(--gh-light);
-  }
-
-  .badge-discount {
-    @apply text-xs font-semibold px-2.5 py-0.5 rounded-full;
-    background: linear-gradient(135deg, var(--gh-navy), var(--gh-accent));
     color: #93b4ff;
   }
+  .tag-btn:hover:not(.active) { border-color: var(--gh-border-hover); color: #93b4ff; }
 
-  .label {
-    @apply block text-sm font-medium mb-1.5;
-    color: var(--gh-body);
-  }
-  .label-muted {
+  /* --- Info pills on cards --- */
+  .info-pill {
+    background-color: var(--gh-pill);
+    border: 1px solid var(--gh-border);
+    border-radius: 999px;
+    padding: 3px 10px;
+    font-size: 11px;
     color: var(--gh-muted);
-    font-weight: 400;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  /* --- Inputs & selects --- */
+  .gh-input {
+    background: var(--gh-card);
+    border: 1px solid var(--gh-border);
+    color: var(--gh-body);
+    border-radius: 10px;
+    padding: 11px 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s;
+    width: 100%;
+  }
+  .gh-input:focus { border-color: var(--gh-accent); }
+  .gh-input::placeholder { color: var(--gh-dim); }
+
+  /* --- Divider --- */
+  .gh-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gh-border), transparent);
+    margin: 14px 0;
+  }
+
+  /* --- Labels --- */
+  .label {
+    display: block;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--gh-muted);
+    margin-bottom: 6px;
+    font-family: 'DM Sans', sans-serif;
   }
 }
