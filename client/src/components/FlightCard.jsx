@@ -2,6 +2,52 @@ import { useState } from 'react';
 import { useSavedFlights } from '../hooks/useSavedFlights';
 import { useAlerts } from '../hooks/useAlerts';
 
+// IATA code → city name
+const CITY_NAMES = {
+  // Philippines
+  MNL: 'Manila',       CEB: 'Cebu',         DVO: 'Davao',
+  ILO: 'Iloilo',       BCD: 'Bacolod',      KLO: 'Kalibo',
+  MPH: 'Boracay',      TAG: 'Bohol',         TAC: 'Tacloban',
+  PPS: 'Puerto Princesa', ZAM: 'Zamboanga',  GEN: 'General Santos',
+  CGY: 'Cagayan de Oro', RXS: 'Roxas',      DGT: 'Dumaguete',
+  BXU: 'Butuan',       SJI: 'San Jose',      OZC: 'Ozamiz',
+  CYP: 'Calbayog',     MLP: 'Cotabato',      CRM: 'Catarman',
+  // East Asia
+  NRT: 'Tokyo',        HND: 'Tokyo',         KIX: 'Osaka',
+  NGO: 'Nagoya',       FUK: 'Fukuoka',       CTS: 'Sapporo',
+  ICN: 'Seoul',        GMP: 'Seoul',          PUS: 'Busan',
+  HKG: 'Hong Kong',
+  PEK: 'Beijing',      PKX: 'Beijing',        PVG: 'Shanghai',
+  SHA: 'Shanghai',     CAN: 'Guangzhou',      SZX: 'Shenzhen',
+  CTU: 'Chengdu',      WUH: 'Wuhan',          XMN: 'Xiamen',
+  // Southeast Asia
+  SIN: 'Singapore',
+  KUL: 'Kuala Lumpur', LGK: 'Langkawi',
+  BKK: 'Bangkok',      HKT: 'Phuket',         CNX: 'Chiang Mai',
+  CGK: 'Jakarta',      DPS: 'Bali',
+  HAN: 'Hanoi',        SGN: 'Ho Chi Minh City',
+  RGN: 'Yangon',
+  // South Asia
+  DEL: 'New Delhi',    BOM: 'Mumbai',         AMD: 'Ahmedabad',
+  BLR: 'Bangalore',    MAA: 'Chennai',        CCU: 'Kolkata',
+  CMB: 'Colombo',      DAC: 'Dhaka',
+  // Middle East
+  DXB: 'Dubai',        AUH: 'Abu Dhabi',      DOH: 'Doha',
+  RUH: 'Riyadh',       KWI: 'Kuwait City',    AMM: 'Amman',
+  // Europe
+  LHR: 'London',       LGW: 'London',         CDG: 'Paris',
+  AMS: 'Amsterdam',    FCO: 'Rome',            MAD: 'Madrid',
+  BCN: 'Barcelona',    FRA: 'Frankfurt',       MUC: 'Munich',
+  ZRH: 'Zurich',       VIE: 'Vienna',
+  // Americas
+  LAX: 'Los Angeles',  SFO: 'San Francisco',  JFK: 'New York',
+  EWR: 'New York',     ORD: 'Chicago',         MIA: 'Miami',
+  YYZ: 'Toronto',      YVR: 'Vancouver',
+  // Oceania
+  SYD: 'Sydney',       MEL: 'Melbourne',      BNE: 'Brisbane',
+  AKL: 'Auckland',     NAN: 'Nadi',
+};
+
 // Destination emoji map by IATA code
 const DEST_EMOJI = {
   NRT: '🗼', HND: '🗼', KIX: '⛩️', NGO: '🏯',
@@ -177,10 +223,11 @@ export default function FlightCard({ offer, dictionaries = {}, index = 0 }) {
         {/* Route display */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
           <div>
-            <div style={{ fontSize: 22, fontWeight: 700, fontFamily: "'Space Grotesk', sans-serif", letterSpacing: '-0.5px', color: '#e2e8f0' }}>
-              {fromCode}
+            <div style={{ fontSize: 18, fontWeight: 700, fontFamily: "'Space Grotesk', sans-serif", letterSpacing: '-0.3px', color: '#e2e8f0', lineHeight: 1.2 }}>
+              {CITY_NAMES[fromCode] || fromCode}
             </div>
-            <div style={{ fontSize: 11, color: '#2d3748' }}>{formatTime(depDate)}</div>
+            <div style={{ fontSize: 10, color: '#3b5fc0', fontWeight: 600, letterSpacing: '1px', marginTop: 2 }}>{fromCode}</div>
+            <div style={{ fontSize: 11, color: '#2d3748', marginTop: 1 }}>{formatTime(depDate)}</div>
           </div>
           <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: 4 }}>
             <div style={{ flex: 1, height: 1, background: 'linear-gradient(to right, #1a2035, #2a3a6e)' }} />
@@ -188,10 +235,11 @@ export default function FlightCard({ offer, dictionaries = {}, index = 0 }) {
             <div style={{ flex: 1, height: 1, background: 'linear-gradient(to right, #2a3a6e, #1a2035)' }} />
           </div>
           <div style={{ textAlign: 'right' }}>
-            <div style={{ fontSize: 22, fontWeight: 700, fontFamily: "'Space Grotesk', sans-serif", letterSpacing: '-0.5px', color: '#e2e8f0' }}>
-              {toCode}
+            <div style={{ fontSize: 18, fontWeight: 700, fontFamily: "'Space Grotesk', sans-serif", letterSpacing: '-0.3px', color: '#e2e8f0', lineHeight: 1.2 }}>
+              {CITY_NAMES[toCode] || toCode}
             </div>
-            <div style={{ fontSize: 11, color: '#2d3748' }}>{formatTime(arrDate)}</div>
+            <div style={{ fontSize: 10, color: '#3b5fc0', fontWeight: 600, letterSpacing: '1px', marginTop: 2 }}>{toCode}</div>
+            <div style={{ fontSize: 11, color: '#2d3748', marginTop: 1 }}>{formatTime(arrDate)}</div>
           </div>
         </div>
 
