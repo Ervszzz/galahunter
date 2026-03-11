@@ -48,21 +48,36 @@ const CITY_NAMES = {
   AKL: 'Auckland',     NAN: 'Nadi',
 };
 
-// Airline carrier code → direct booking URL
-const AIRLINE_URLS = {
-  '5J': 'https://www.cebupacificair.com',   // Cebu Pacific
-  'Z2': 'https://www.airasia.com',           // AirAsia Philippines
-  'AK': 'https://www.airasia.com',           // AirAsia Malaysia
-  'FD': 'https://www.airasia.com',           // Thai AirAsia
-  'QZ': 'https://www.airasia.com',           // Indonesia AirAsia
-  'PR': 'https://www.philippineairlines.com', // Philippine Airlines
-  '2P': 'https://www.philippineairlines.com', // PAL Express
-};
+// Format YYYY-MM-DD → DDMMMYYYY (e.g. 2026-10-03 → 03OCT2026) for Cebu Pacific
+function toCebFormat(isoDate) {
+  if (!isoDate) return '';
+  const [y, m, d] = isoDate.split('-');
+  const months = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+  return `${d}${months[parseInt(m, 10) - 1]}${y}`;
+}
 
-function getBookingUrl(carrierCode, fromCode, toCode) {
-  if (AIRLINE_URLS[carrierCode]) return AIRLINE_URLS[carrierCode];
+function getBookingUrl(carrierCode, fromCode, toCode, departDate) {
+  // departDate expected as YYYY-MM-DD
+  const date = departDate ? departDate.split('T')[0] : '';
+
+  if (carrierCode === '5J') {
+    // Cebu Pacific — pre-filled search
+    const dd = toCebFormat(date);
+    return `https://book.cebupacificair.com/Search?o1=${fromCode}&d1=${toCode}${dd ? `&dd1=${dd}` : ''}&adt=1&chd=0&inf=0&s=true`;
+  }
+
+  if (['Z2', 'AK', 'FD', 'QZ'].includes(carrierCode)) {
+    // AirAsia — pre-filled search
+    return `https://www.airasia.com/en/book/flight-search.html?lang=en&org=${fromCode}&dest=${toCode}${date ? `&d=${date}` : ''}&t=1&a=1&c=0&i=0`;
+  }
+
+  if (['PR', '2P'].includes(carrierCode)) {
+    // Philippine Airlines — pre-filled search
+    return `https://www.philippineairlines.com/en/ph/home/book-a-flight?origin=${fromCode}&destination=${toCode}${date ? `&departDate=${date}` : ''}&type=OW`;
+  }
+
   // Kiwi.com fallback for international/unknown carriers
-  return `https://www.kiwi.com/en/search/results/${fromCode}/${toCode}`;
+  return `https://www.kiwi.com/en/search/results/${fromCode}/${toCode}${date ? `/${date}/no-return` : ''}`;
 }
 
 // Destination emoji map by IATA code
@@ -311,7 +326,7 @@ export default function FlightCard({ offer, dictionaries = {}, index = 0 }) {
               {saved ? '❤️ Saved' : 'Save Deal →'}
             </button>
             <a
-              href={getBookingUrl(carrierCode, fromCode, toCode)}
+              href={getBookingUrl(carrierCode, fromCode, toCode, depDate)}
               target="_blank"
               rel="noopener noreferrer"
               className="book-btn"
