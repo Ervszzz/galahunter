@@ -39,7 +39,7 @@ export default function App() {
           GalaHunter &copy; {new Date().getFullYear()} — Fly smart, fly far ✈️
           <br />
           <span style={{ fontSize: 11, color: '#1e2a3a', marginTop: 4, display: 'inline-block' }}>
-            GalaHunter earns a small commission when you book through our links — at no extra cost to you.
+            GalaHunter finds the best flight deals so you can book directly with your airline.
           </span>
         </footer>
       </div>

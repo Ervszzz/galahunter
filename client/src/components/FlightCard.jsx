@@ -48,6 +48,23 @@ const CITY_NAMES = {
   AKL: 'Auckland',     NAN: 'Nadi',
 };
 
+// Airline carrier code → direct booking URL
+const AIRLINE_URLS = {
+  '5J': 'https://www.cebupacificair.com',   // Cebu Pacific
+  'Z2': 'https://www.airasia.com',           // AirAsia Philippines
+  'AK': 'https://www.airasia.com',           // AirAsia Malaysia
+  'FD': 'https://www.airasia.com',           // Thai AirAsia
+  'QZ': 'https://www.airasia.com',           // Indonesia AirAsia
+  'PR': 'https://www.philippineairlines.com', // Philippine Airlines
+  '2P': 'https://www.philippineairlines.com', // PAL Express
+};
+
+function getBookingUrl(carrierCode, fromCode, toCode) {
+  if (AIRLINE_URLS[carrierCode]) return AIRLINE_URLS[carrierCode];
+  // Kiwi.com fallback for international/unknown carriers
+  return `https://www.kiwi.com/en/search/results/${fromCode}/${toCode}`;
+}
+
 // Destination emoji map by IATA code
 const DEST_EMOJI = {
   NRT: '🗼', HND: '🗼', KIX: '⛩️', NGO: '🏯',
@@ -293,17 +310,15 @@ export default function FlightCard({ offer, dictionaries = {}, index = 0 }) {
             >
               {saved ? '❤️ Saved' : 'Save Deal →'}
             </button>
-            {offer.bookingUrl && (
-              <a
-                href={offer.bookingUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="book-btn"
-                style={{ display: 'block', textAlign: 'center', textDecoration: 'none', background: 'linear-gradient(135deg, #065f46, #047857)' }}
-              >
-                Book Now ↗
-              </a>
-            )}
+            <a
+              href={getBookingUrl(carrierCode, fromCode, toCode)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="book-btn"
+              style={{ display: 'block', textAlign: 'center', textDecoration: 'none', background: 'linear-gradient(135deg, #065f46, #047857)' }}
+            >
+              Book Now ↗
+            </a>
           </div>
         </div>
       </div>

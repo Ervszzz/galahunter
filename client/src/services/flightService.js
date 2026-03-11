@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: '/api',
+  baseURL: import.meta.env.VITE_API_URL ? `${import.meta.env.VITE_API_URL}/api` : '/api',
   headers: { 'Content-Type': 'application/json' },
 });
 
@@ -65,5 +65,20 @@ export async function getPopular(params) {
  */
 export async function searchAirports(term) {
   const { data } = await api.get('/flights/airports', { params: { term } });
+  return data;
+}
+
+export async function subscribe(email) {
+  const { data } = await api.post('/subscribe', { email });
+  return data;
+}
+
+export async function createAlert({ origin, destination, email }) {
+  const { data } = await api.post('/alerts', { origin, destination, email });
+  return data;
+}
+
+export async function getAlerts() {
+  const { data } = await api.get('/alerts');
   return data;
 }
