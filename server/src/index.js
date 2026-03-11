@@ -2,6 +2,8 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const flightRoutes = require('./routes/flights');
+const subscribeRoutes = require('./routes/subscribe');
+const alertsRoutes = require('./routes/alerts');
 const errorHandler = require('./middleware/errorHandler');
 
 const app = express();
@@ -18,6 +20,8 @@ app.get('/api/health', (req, res) => {
 });
 
 app.use('/api/flights', flightRoutes);
+app.use('/api/subscribe', subscribeRoutes);
+app.use('/api/alerts', alertsRoutes);
 app.use(errorHandler);
 
 // Only start the HTTP server when running locally (not on Vercel serverless)

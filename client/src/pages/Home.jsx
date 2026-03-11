@@ -3,6 +3,8 @@ import { useFlightSearch } from '../hooks/useFlightSearch';
 import SearchForm from '../components/SearchForm';
 import FlightCard from '../components/FlightCard';
 import SkeletonCard from '../components/SkeletonCard';
+import HowItWorks from '../components/HowItWorks';
+import NewsletterSignup from '../components/NewsletterSignup';
 
 const STOP_TAGS = ['All', 'Non-stop ✈', '1 Stop 🔄', '2+ Stops 🛑'];
 
@@ -155,6 +157,14 @@ export default function Home() {
               ))}
             </div>
           )}
+        </>
+      )}
+
+      {/* How it works + Newsletter — shown on popular/home view */}
+      {!loading && isPopular && (
+        <>
+          <HowItWorks />
+          <NewsletterSignup />
         </>
       )}
     </div>

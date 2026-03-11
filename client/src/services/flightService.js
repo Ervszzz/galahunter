@@ -67,3 +67,18 @@ export async function searchAirports(term) {
   const { data } = await api.get('/flights/airports', { params: { term } });
   return data;
 }
+
+export async function subscribe(email) {
+  const { data } = await api.post('/subscribe', { email });
+  return data;
+}
+
+export async function createAlert({ origin, destination, email }) {
+  const { data } = await api.post('/alerts', { origin, destination, email });
+  return data;
+}
+
+export async function getAlerts() {
+  const { data } = await api.get('/alerts');
+  return data;
+}
