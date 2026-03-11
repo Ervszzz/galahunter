@@ -67,13 +67,13 @@ Responses are cached for **10 minutes** to avoid rate limits.
 
 ---
 
-## Deploying the Backend to Railway
+## Deploying the Backend to Render
 
 1. Push this repo to GitHub.
-2. Go to [railway.app](https://railway.app) → **New Project** → **Deploy from GitHub repo**.
-3. Select this repository and set the **Root Directory** to `server`.
-4. Railway detects `railway.json` and builds with Nixpacks automatically.
-5. Under **Variables**, add:
+2. Go to [render.com](https://render.com) → **New** → **Web Service**.
+3. Connect your GitHub repo. Set **Root Directory** to `server`.
+4. Render detects `render.yaml` — confirm the build and start commands are pre-filled.
+5. Under **Environment**, add:
 
    | Key | Value |
    |-----|-------|
@@ -81,7 +81,7 @@ Responses are cached for **10 minutes** to avoid rate limits.
    | `TRAVELPAYOUTS_MARKER` | your TravelPayouts affiliate marker |
    | `FRONTEND_URL` | your Vercel frontend URL (e.g. `https://galahunter.vercel.app`) |
 
-6. After deploy, copy the Railway public URL (e.g. `https://galahunter-production.up.railway.app`).
+6. After deploy, copy the Render public URL (e.g. `https://galahunter-backend.onrender.com`).
 
 ---
 
@@ -96,7 +96,7 @@ Responses are cached for **10 minutes** to avoid rate limits.
 
    | Key | Value |
    |-----|-------|
-   | `VITE_API_URL` | your Railway backend URL (e.g. `https://galahunter-production.up.railway.app`) |
+   | `VITE_API_URL` | your Render backend URL (e.g. `https://galahunter-backend.onrender.com`) |
 
 5. Deploy. The `client/vercel.json` handles SPA routing automatically.
 
@@ -104,17 +104,17 @@ Responses are cached for **10 minutes** to avoid rate limits.
 
 ## Environment Variable Reference
 
-### Backend (Railway / `server/.env`)
+### Backend (Render / `server/.env`)
 
 | Variable | Required | Description |
 |----------|----------|-------------|
 | `TRAVELPAYOUTS_TOKEN` | Yes | API token from TravelPayouts dashboard |
 | `TRAVELPAYOUTS_MARKER` | Yes | Affiliate marker ID |
-| `PORT` | No | Port to listen on (Railway injects this automatically) |
+| `PORT` | No | Port to listen on (Render injects this automatically) |
 | `FRONTEND_URL` | Yes (production) | Vercel frontend URL for CORS allowlist |
 
 ### Frontend (Vercel / `client/.env`)
 
 | Variable | Required | Description |
 |----------|----------|-------------|
-| `VITE_API_URL` | Yes (production) | Full Railway backend URL — no trailing slash |
+| `VITE_API_URL` | Yes (production) | Full Render backend URL — no trailing slash |
